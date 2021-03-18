@@ -40,7 +40,7 @@ export class WorkComponent implements OnInit {
 
   errorResponse = 'failed';
   okResponse = 'ok';
-  lastError = 'Нет ошибок';
+  lastError = 'Нет ошибок.';
 
   points: { [key: number]: Point[]; } = {
     1: [],
@@ -132,6 +132,9 @@ export class WorkComponent implements OnInit {
 
     if (this.currR < 1) {
       return;
+    } else if(!(Number(this.strY) > -5 && Number(this.strY) < 5)){
+      this.lastError = "Невозможно отправить точку, проверьте ввод Y.";
+      return;
     }
 
     this.http.post(this.addPointUrl, {
@@ -150,6 +153,7 @@ export class WorkComponent implements OnInit {
 
         this.points[lastPt.r].push(lastPt);
         this.pointsForTable.push(lastPt);
+        this.lastError = "Нет ошибок."
       }
     });
   }

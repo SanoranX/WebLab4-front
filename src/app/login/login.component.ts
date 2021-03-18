@@ -43,6 +43,8 @@ export class LoginComponent implements OnInit {
           this.lastError = 'Неправильный логин или пароль.';
         }
       });
+    }else {
+      this.lastError = "Поле для ввода содержит больше 16 знаков.";
     }
   
   }
