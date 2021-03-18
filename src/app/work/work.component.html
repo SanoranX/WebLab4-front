@@ -1,0 +1,74 @@
+<div class="alert alert-success">
+  Теперь оно работает!!!
+</div>
+<div class="row">
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h4>Значение Х: {{currX}}</h4>
+        <button type="button" (click)="currX = -4" class="btn btn-primary" style="margin-right: 10px;">-4</button>
+        <button type="button" (click)="currX = -3" class="btn btn-primary" style="margin-right: 10px;">-3</button>
+        <button type="button" (click)="currX = -2" class="btn btn-primary" style="margin-right: 10px;">-2</button>
+        <button type="button" (click)="currX = -1" class="btn btn-primary" style="margin-right: 10px;">-1</button>
+        <button type="button" (click)="currX = 0" class="btn btn-primary" style="margin-right: 10px;">0</button>
+        <button type="button" (click)="currX = 1" class="btn btn-primary" style="margin-right: 10px;">1</button>
+        <button type="button" (click)="currX = 2" class="btn btn-primary" style="margin-right: 10px;">2</button>
+        <button type="button" (click)="currX = 3" class="btn btn-primary" style="margin-right: 10px;">3</button>
+        <button type="button" (click)="currX = 4" class="btn btn-primary" style="margin-right: 10px;">4</button>
+        <br>
+        <br>
+        <h4>Значение Y: {{currY}}</h4>
+        <input type="text" [(ngModel)]="strY" (ngModelChange)="validateY()" class="form-control"/>
+        <br>
+        <h4>Значение R: {{currR}}</h4>
+        <select [(ngModel)]="currR" (change)="rChanged()" class="form-control">
+          <option *ngFor="let c of rChoices" [ngValue]="c.value">{{c.strValue}}</option>
+        </select>
+        <br>
+        <div class="btn-group" role="group" aria-label="Actions">
+          <button type="button" (click)="onSubmit()" class="btn btn-primary" style="margin-right: 10px;">Отправить</button>
+          <button type="button" (click)="onClear()" class="btn btn-danger" style="margin-right: 10px;">Очистить таблицу и точки</button>
+          <button type="button" (click)="logout()" class="btn btn-primary" style="margin-right: 10px;">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <app-visual [rValue]="currR" [simplePoints]="pointsForVisual" (click)="onCanvasClick($event)"></app-visual>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-3">
+    <div class="toast" style="opacity: 1">
+      <div class="toast-header">
+        <strong class="me-auto">Последняя ошибка:</strong>
+      </div>
+      <div class="toast-body">
+        {{this.lastError}}
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">X</th>
+      <th scope="col">Y</th>
+      <th scope="col">R</th>
+      <th scope="col">Входит?</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr *ngFor="let result of pointsForTable">
+      <td>{{result.x | number:'1.2-2'}}</td>
+      <td>{{result.y | number:'1.2-2'}}</td>
+      <td>{{result.r | number:'1.2-2'}}</td>
+      <td>{{result.result}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
