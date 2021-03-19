@@ -29,7 +29,22 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    if(!(this.username.length > 16) && !(this.password.length > 16)){
+    if(this.username.length > 16 && (this.password.length > 16)){
+      this.lastError = "Поле для ввода содержит больше 16 знаков.";
+      return;
+    }else if(this.username.indexOf(" ") >= 0 || this.password.indexOf(" ") >= 0){
+      this.lastError = "Поля не должны содержать пробелы.";
+      return;
+    }else if(this.username === this.password){
+      this.lastError = "В целях безопасности, пароль и логин не должны быть одинаковые.";
+      return;
+    }else if(this.username.indexOf(";") >= 0 || this.password.indexOf(";") >= 0){
+      this.lastError = "В полях не должен быть знак \";\"";
+      return;
+    }else if(this.username.indexOf("@") >= 0 || this.password.indexOf("@") >= 0){
+      this.lastError = "В полях не должны быть знаки на подобии \"@\"";
+      return;
+    }else{
       this.http.post(this.lkLoginUrl, {
         username: this.username,
         password: this.password
@@ -41,17 +56,30 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('username', this.username);
           this.router.navigate(['admin']);
         } else {
-          this.lastError = 'Неправильный логин или пароль.';
+          this.lastError = 'Произошла ошибка:\n1)Возможно, что вы ввели неправильный логин/пароль\n2)Возможно, пользователя не существует\n3)Возможно, что у вас включен Caps-Lock.';
         }
       });
-    }else {
-      this.lastError = "Поле для ввода содержит больше 16 знаков.";
     }
-  
   }
 
   register(): void {
-    if(!(this.username.length > 16) && !(this.password.length > 16)){
+    if(this.username.length > 16 && (this.password.length > 16)){
+      this.lastError = "Поле для ввода содержит больше 16 знаков.";
+      return;
+    }else if(this.username.indexOf(" ") >= 0 || this.password.indexOf(" ") >= 0){
+      this.lastError = "Поля не должны содержать пробелы.";
+      return;
+    }else if(this.username === this.password){
+      this.lastError = "В целях безопасности, пароль и логин не должны быть одинаковые.";
+      return;
+    }else if(this.username.indexOf(";") >= 0 || this.password.indexOf(";") >= 0){
+      this.lastError = "В полях не должен быть знак \";\"";
+      return;
+    }else if(this.username.indexOf("@") >= 0 || this.password.indexOf("@") >= 0){
+      this.lastError = "В полях не должны быть знаки на подобии \"@\"";
+      return;
+    }
+    else{
       this.http.post(this.lkRegisterUrl, {
         username: this.username,
         password: this.password
@@ -63,14 +91,11 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('username', this.username);
           this.router.navigate(['admin']);
         } else if (response.status == this.errorResponse) {
-          this.lastError = 'Зарегистрироваться не получилось.';
+          this.lastError = 'Произошла неожиданная ошибка во время регистрации. Обратитесь к администрации.';
         } else if (response.status == 'exists') {
           this.lastError = 'Аккаунт уже существует.';
         }
       });
-    }else{
-      this.lastError = "Поле для ввода содержит больше 16 знаков."
     }
-    
   }
 }

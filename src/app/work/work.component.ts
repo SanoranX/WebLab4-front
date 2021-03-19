@@ -105,8 +105,14 @@ export class WorkComponent implements OnInit {
     ).subscribe(data => {
       const response: any = data;
       if (response.status === this.errorResponse) {
-        this.lastError = 'Добавить точку не получилось.';
-      } else {
+        this.lastError = 'Добавить точку не получилось, или возможно ваша сессия устарела, попробуйте перезайти.';
+      }
+      else if(response.status === "outdated"){
+        this.http.post(this.logoutUrl, {key: localStorage.getItem('key')});
+        localStorage.removeItem('key');
+        this.router.navigate(['']);
+      }     
+      else {
         const lastPt: Point = response.last_point;
         this.points[lastPt.r].push(lastPt);
         this.pointsForTable.push(lastPt);
@@ -150,7 +156,12 @@ export class WorkComponent implements OnInit {
 
       if (response.status === this.errorResponse) {
         this.lastError = 'Добавить точку не получилось.';
-      } else {
+      }else if(response.status === "outdated"){
+        this.http.post(this.logoutUrl, {key: localStorage.getItem('key')});
+        localStorage.removeItem('key');
+        this.router.navigate(['']);
+      } 
+      else {
         const lastPt: Point = response.last_point;
 
         this.points[lastPt.r].push(lastPt);
@@ -171,7 +182,12 @@ export class WorkComponent implements OnInit {
       const resp: any = data;
       if (resp.status === this.errorResponse) {
         this.lastError = 'Очистить не вышло, проверьте соединение.';
-      } else {
+      } else if(resp.status === "outdated"){
+          this.http.post(this.logoutUrl, {key: localStorage.getItem('key')});
+          localStorage.removeItem('key');
+          this.router.navigate(['']);
+      }
+      else {
         location.reload(true);
       }
     });
