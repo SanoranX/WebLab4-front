@@ -13,6 +13,7 @@ interface Point {
   y: number;
   r: number;
   result: boolean;
+  creator: string;
 }
 
 @Component({
@@ -22,7 +23,7 @@ interface Point {
 export class WorkComponent implements OnInit {
   xChoices: Choice[];
   rChoices: Choice[];
-
+  username: string;
   currX: number;
 
   currY: number;
@@ -30,8 +31,8 @@ export class WorkComponent implements OnInit {
 
   currR: number;
 
-  baseApiUrl = 'http://localhost:8080/lab4-1.0/api/points/';
-  baseLkUrl = 'http://localhost:8080/lab4-1.0/lk/';
+  baseApiUrl = 'http://sanoranx.xyz:8080/lab4-1.0/api/points/';
+  baseLkUrl = 'http://sanoranx.xyz:8080/lab4-1.0/lk/';
 
   logoutUrl = this.baseLkUrl + 'logout';
   addPointUrl = this.baseApiUrl + 'add';
@@ -57,7 +58,7 @@ export class WorkComponent implements OnInit {
     this.currY = 0;
     this.strY = '0';
     this.currR = 1;
-    this.xChoices = [
+    this.rChoices = [
       {value: -3, strValue: '-3'},
       {value: -2, strValue: '-2'},
       {value: -1, strValue: '-1'},
@@ -66,14 +67,13 @@ export class WorkComponent implements OnInit {
       {value: 2, strValue: '2'},
       {value: 3, strValue: '3'},
       {value: 4, strValue: '4'},
-      {value: 5, strValue: '5'},
     ];
-    this.rChoices = this.xChoices;
     if (localStorage.getItem('key') == null) {
       router.navigate(['']);
     }
     this.fetchPoints();
     this.titleService.setTitle("Working page Lab4");
+    this.username = localStorage.getItem('username');
   }
 
 
@@ -97,6 +97,7 @@ export class WorkComponent implements OnInit {
 
     this.http.post(this.addPointUrl, {
         key: localStorage.getItem('key'),
+        username: localStorage.getItem('username'),
         x: transferX,
         y: transferY,
         r: this.currR
@@ -139,6 +140,7 @@ export class WorkComponent implements OnInit {
 
     this.http.post(this.addPointUrl, {
         key: localStorage.getItem('key'),
+        username: localStorage.getItem('username'),
         x: this.currX,
         y: this.currY,
         r: this.currR
@@ -179,6 +181,11 @@ export class WorkComponent implements OnInit {
     this.pointsForVisual = this.points[this.currR];
   }
 
+  rChangedParam(value: number){
+    this.currR = value;
+    this.pointsForVisual = this.points[this.currR];
+  }
+
   validateY(): void {
     while (!(new RegExp('^(-|-?[0-9]+(.[0-9]+)?)$')).test(this.strY) && this.strY.length > 0) {
       this.strY = this.strY.substring(0, this.strY.length - 1);
@@ -191,7 +198,7 @@ export class WorkComponent implements OnInit {
     if (Number(this.strY) > -5 && Number(this.strY) < 5) {
       this.currY = Number(this.strY);
     } else {
-      this.lastError = 'Значение Y должно быть в интервале (-5; 5).';
+      this.lastError = 'Значение Y должно быть в интервале (-5; 5) и не содержать букв.';
     }
   }
 

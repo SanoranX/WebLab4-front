@@ -1,5 +1,5 @@
 <div class="alert alert-success">
-  Теперь оно работает!!!
+  Вы зашли под пользователем: {{username}}
 </div>
 <div class="row">
   <div class="col-sm">
@@ -21,9 +21,11 @@
         <input type="text" [(ngModel)]="strY" (ngModelChange)="validateY()" class="form-control"/>
         <br>
         <h4>Значение R: {{currR}}</h4>
-        <select [(ngModel)]="currR" (change)="rChanged()" class="form-control">
-          <option *ngFor="let c of rChoices" [ngValue]="c.value">{{c.strValue}}</option>
-        </select>
+        <button type="button" (click)="rChangedParam(1)" class="btn btn-primary" style="margin-right: 10px;">1</button>
+        <button type="button" (click)="rChangedParam(2)" class="btn btn-primary" style="margin-right: 10px;">2</button>
+        <button type="button" (click)="rChangedParam(3)" class="btn btn-primary" style="margin-right: 10px;">3</button>
+        <button type="button" (click)="rChangedParam(4)" class="btn btn-primary" style="margin-right: 10px;">4</button>
+        <br>
         <br>
         <div class="btn-group" role="group" aria-label="Actions">
           <button type="button" (click)="onSubmit()" class="btn btn-success" style="margin-right: 10px;">Отправить</button>
@@ -58,6 +60,7 @@
       <th scope="col">X</th>
       <th scope="col">Y</th>
       <th scope="col">R</th>
+      <th scope="col">Создатель</th>
       <th scope="col">Входит?</th>
     </tr>
     </thead>
@@ -67,6 +70,7 @@
       <td>{{result.x | number:'1.2-2'}}</td>
       <td>{{result.y | number:'1.2-2'}}</td>
       <td>{{result.r | number:'1.2-2'}}</td>
+      <td>{{result.creator}}</td>
       <td>{{result.result}}</td>
     </tr>
     </tbody>

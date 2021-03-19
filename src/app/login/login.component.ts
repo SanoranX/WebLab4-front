@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
-  lkBaseUrl = 'http://localhost:8080/lab4-1.0/lk/';
+  lkBaseUrl = 'http://sanoranx.xyz:8080/lab4-1.0/lk/';
   lkLoginUrl = this.lkBaseUrl + 'login';
   lkRegisterUrl = this.lkBaseUrl + 'register';
 
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   
         if (response.status !== this.errorResponse) {
           localStorage.setItem('key', response.key);
+          localStorage.setItem('username', this.username);
           this.router.navigate(['admin']);
         } else {
           this.lastError = 'Неправильный логин или пароль.';
@@ -59,6 +60,7 @@ export class LoginComponent implements OnInit {
   
         if (response.status !== 'exists' && response.status !== this.errorResponse) {
           localStorage.setItem('key', response.key);
+          localStorage.setItem('username', this.username);
           this.router.navigate(['admin']);
         } else if (response.status == this.errorResponse) {
           this.lastError = 'Зарегистрироваться не получилось.';
