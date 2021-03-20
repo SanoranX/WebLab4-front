@@ -79,46 +79,51 @@ export class WorkComponent implements OnInit {
 
   onCanvasClick(event: MouseEvent): void {
 
-    if (this.currR < 1) {
-      this.lastError = 'Значение R должно быть больше 0.';
-      return;
-    }
-
-    const elem = document.getElementById('canvas');
-    const br = elem.getBoundingClientRect();
-    const left = br.left;
-    const top = br.top;
-
-    const mouseX: number = event.clientX - left;
-    const mouseY: number = event.clientY - top;
-
-    const transferX = this.currR * (mouseX - 150) / 130;
-    const transferY = this.currR * (150 - mouseY) / 130;
-
-    this.http.post(this.addPointUrl, {
-        key: localStorage.getItem('key'),
-        username: localStorage.getItem('username'),
-        x: transferX,
-        y: transferY,
-        r: this.currR
+    setTimeout(() => 
+    {
+      if (this.currR < 1) {
+        this.lastError = 'Значение R должно быть больше 0.';
+        return;
       }
-    ).subscribe(data => {
-      const response: any = data;
-      if (response.status === this.errorResponse) {
-        this.lastError = 'Добавить точку не получилось, или возможно ваша сессия устарела, попробуйте перезайти.';
-      }
-      else if(response.status === "outdated"){
-        this.http.post(this.logoutUrl, {key: localStorage.getItem('key')});
-        localStorage.removeItem('key');
-        this.router.navigate(['']);
-      }     
-      else {
-        const lastPt: Point = response.last_point;
-        this.points[lastPt.r].push(lastPt);
-        this.pointsForTable.push(lastPt);
-      }
-    });
-
+  
+      const elem = document.getElementById('canvas');
+      const br = elem.getBoundingClientRect();
+      const left = br.left;
+      const top = br.top;
+  
+      const mouseX: number = event.clientX - left;
+      const mouseY: number = event.clientY - top;
+  
+      const transferX = this.currR * (mouseX - 150) / 130;
+      const transferY = this.currR * (150 - mouseY) / 130;
+  
+      this.http.post(this.addPointUrl, {
+          key: localStorage.getItem('key'),
+          username: localStorage.getItem('username'),
+          x: transferX,
+          y: transferY,
+          r: this.currR
+        }
+      ).subscribe(data => {
+        const response: any = data;
+        if (response.status === this.errorResponse) {
+          this.lastError = 'Добавить точку не получилось, или возможно ваша сессия устарела, попробуйте перезайти.';
+        }
+        else if(response.status === "outdated"){
+          this.http.post(this.logoutUrl, {key: localStorage.getItem('key')});
+          localStorage.removeItem('key');
+          this.router.navigate(['']);
+        }else if(response.status === "delay"){
+          this.lastError = 'Вы отправляете слишком много запросов на сервер. Попробуйте чуть медленнее.';
+        }
+        else {
+          const lastPt: Point = response.last_point;
+          this.points[lastPt.r].push(lastPt);
+          this.pointsForTable.push(lastPt);
+        }
+      });
+    },
+    0);
   }
 
   fetchPoints(): void {
